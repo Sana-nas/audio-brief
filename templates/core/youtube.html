@@ -1,0 +1,84 @@
+{% extends 'core/layout.html' %}
+{% load static %}
+{% load assets %}
+
+{% block title %}YouTube (coming soon){% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static_v 'css/youtube.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="youtube-container">
+    <div class="youtube-main">
+        <header class="youtube-header">
+            <h1><i class="fab fa-youtube"></i> YouTube Video Summarizer</h1>
+            <p class="subtitle">Extract key insights from any YouTube video</p>
+            <div class="neon-line"></div>
+        </header>
+        
+        <div class="youtube-form-container">
+            <div class="url-input-container">
+                <i class="fab fa-youtube youtube-icon"></i>
+                <input type="url" id="youtube-url" placeholder="Paste YouTube URL here..." required>
+            </div>
+            <div class="button-group">
+                <button type="button" id="summarize-btn" class="summarize-btn"><i class="fas fa-bolt"></i> Summarize Now</button>
+                <button type="button" id="batch-btn" class="batch-summarize-btn"><i class="fas fa-layer-group"></i> Batch Summarize</button>
+            </div>
+        </div>
+        
+        <!-- Coming Soon Feature -->
+        <div class="coming-soon-container">
+            <div class="neon-particles" id="particles-js"></div>
+            
+            <div class="coming-soon-content">
+                <div class="coming-soon-header">
+                    <i class="fas fa-rocket"></i>
+                    <h2>Exciting Features Coming Soon</h2>
+                </div>
+                
+                <p class="coming-soon-description">
+                    We're working on advanced features to enhance your YouTube summarization experience. 
+                    Stay tuned for these powerful tools that will transform how you consume video content.
+                </p>
+                
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3 class="feature-title">Summary History</h3>
+                        <p class="feature-description">Track and revisit all your previously summarized videos in one convenient dashboard.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h3 class="feature-title">Multi-language Support</h3>
+                        <p class="feature-description">Get transcriptions and summaries in multiple languages with automatic translation.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="feature-title">AI Insights</h3>
+                        <p class="feature-description">Receive AI-powered insights and key points extracted from your video content.</p>
+                    </div>
+                </div>
+                
+                <button id="notify-btn" class="notify-btn">
+                    <i class="fas fa-bell"></i> Notify Me When Available
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="{% static_v 'js/youtube.js' %}"></script>
+{% endblock %}

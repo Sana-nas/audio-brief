@@ -1,0 +1,209 @@
+{% extends 'core/layout.html' %}
+{% load static %}
+{% load assets %}
+
+{% block title %}Audio Summarize{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static_v 'css/transcribe.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tx-page">
+
+    <header class="tx-header">
+        <h1>Audio Transcription <span>&amp; Summary</span></h1>
+        <p>Upload a recording to get a written transcript and a short summary</p>
+    </header>
+
+    {# ------------------------------------------------------------------ 1. UPLOAD #}
+    {% if not job %}
+    <section class="tx-card upload-card" id="upload-card" data-max-mb="{{ max_upload_mb }}">
+        <form method="post" enctype="multipart/form-data" id="upload-form" action="{% url 'transcribe' %}">
+            {% csrf_token %}
+
+            <label class="dropzone" id="drop-zone" for="audio-input">
+                <span class="dropzone-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+                <strong>Drag &amp; drop your audio file</strong>
+                <span class="dropzone-sub">or click to browse</span>
+                <span class="dropzone-hint">MP3, WAV, M4A, OGG, FLAC or AAC &middot; up to {{ max_upload_mb }} MB</span>
+                <input type="file" name="audio" id="audio-input" accept=".mp3,.wav,.m4a,.ogg,.flac,.aac,audio/*">
+            </label>
+
+            <div class="file-chip" id="file-info" hidden>
+                <span class="file-chip-icon"><i class="fas fa-file-audio"></i></span>
+                <span class="file-chip-text">
+                    <span class="file-chip-name" id="file-name"></span>
+                    <span class="file-chip-meta" id="file-meta"></span>
+                </span>
+                <button type="button" class="icon-btn" id="remove-file" title="Remove file" aria-label="Remove file">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <audio id="audio-preview" class="audio-preview" controls hidden></audio>
+
+            <div class="upload-progress" id="upload-progress" hidden>
+                <div class="upload-progress-label">
+                    <span>Uploading&hellip;</span><span id="upload-percent">0%</span>
+                </div>
+                <div class="bar"><div class="bar-fill" id="upload-bar"></div></div>
+            </div>
+
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+
+            <button type="submit" id="submit-btn" class="btn-primary" disabled>
+                <span>Transcribe now</span> <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+    </section>
+
+    <ol class="what-next">
+        <li><i class="fas fa-wave-square"></i><strong>Prepare</strong><span>Audio is converted to 16 kHz WAV</span></li>
+        <li><i class="fas fa-keyboard"></i><strong>Transcribe</strong><span>Whisper writes down the speech</span></li>
+        <li><i class="fas fa-align-left"></i><strong>Summarize</strong><span>BART condenses the transcript</span></li>
+    </ol>
+
+    {# ------------------------------------------------------------ 2. IN PROGRESS #}
+    {% elif job.state == 'queued' or job.state == 'running' %}
+    <section class="tx-card progress-card" id="progress-card"
+             data-status-url="{% url 'job_status' job.id %}"
+             data-cancel-url="{% url 'job_cancel' job.id %}"
+             data-initial-progress="{{ status.progress }}">
+        {% csrf_token %}
+
+        <div class="file-chip file-chip-center">
+            <span class="file-chip-icon"><i class="fas fa-file-audio"></i></span>
+            <span class="file-chip-text"><span class="file-chip-name">{{ job.filename }}</span></span>
+        </div>
+
+        <div class="progress-layout">
+            <div class="ring-wrap">
+                <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#4361ee"/>
+                            <stop offset="100%" stop-color="#7209b7"/>
+                        </linearGradient>
+                    </defs>
+                    <circle class="ring-track" cx="60" cy="60" r="52"/>
+                    <circle class="ring-value" id="ring-value" cx="60" cy="60" r="52"/>
+                </svg>
+                <div class="ring-label">
+                    <span id="percent-text">{{ status.progress|floatformat:0 }}</span><small>%</small>
+                </div>
+                <div class="equalizer" id="equalizer" aria-hidden="true">
+                    <i></i><i></i><i></i><i></i><i></i>
+                </div>
+            </div>
+
+            <ol class="steps" id="steps">
+                <li class="step done" data-step="upload">
+                    <span class="step-dot"><i class="fas fa-check"></i></span>
+                    <span class="step-body">
+                        <span class="step-title">Upload</span>
+                        <span class="step-note">Your file is on the server</span>
+                    </span>
+                </li>
+                <li class="step" data-step="prepare">
+                    <span class="step-dot"><i class="fas fa-check"></i></span>
+                    <span class="step-body">
+                        <span class="step-title">Prepare audio</span>
+                        <span class="step-note">Loading models, converting to WAV</span>
+                    </span>
+                </li>
+                <li class="step" data-step="transcribe">
+                    <span class="step-dot"><i class="fas fa-check"></i></span>
+                    <span class="step-body">
+                        <span class="step-title">Transcribe</span>
+                        <span class="step-note">Whisper is writing down the speech</span>
+                        <span class="bar bar-thin"><span class="bar-fill" data-bar="transcribe"></span></span>
+                    </span>
+                </li>
+                <li class="step" data-step="summarize">
+                    <span class="step-dot"><i class="fas fa-check"></i></span>
+                    <span class="step-body">
+                        <span class="step-title">Summarize</span>
+                        <span class="step-note">BART is condensing the transcript</span>
+                        <span class="bar bar-thin"><span class="bar-fill" data-bar="summarize"></span></span>
+                    </span>
+                </li>
+            </ol>
+        </div>
+
+        <p class="status-message" id="status-message" aria-live="polite">{{ status.message }}</p>
+        <p class="status-meta">
+            <span><i class="far fa-clock"></i> Elapsed <b id="elapsed-text">0:00</b></span>
+            <span id="queue-note" hidden></span>
+        </p>
+        <p class="status-hint">Long recordings can take a few minutes. You can leave this page open, or come back to it later.</p>
+
+        <button type="button" class="btn-ghost" id="cancel-btn"><i class="fas fa-stop-circle"></i> Cancel</button>
+    </section>
+
+    {# ----------------------------------------------------------------- 3. RESULT #}
+    {% elif job.state == 'done' %}
+    <section class="results" id="results">
+        <div class="results-top">
+            <div class="results-badge"><i class="fas fa-check-circle"></i> Processing complete</div>
+            <div class="chips">
+                <span class="chip"><i class="fas fa-file-audio"></i> {{ audio_filename }}</span>
+                <span class="chip"><i class="far fa-clock"></i> {{ stats.audio_length }} of audio</span>
+                <span class="chip"><i class="fas fa-align-left"></i> {{ stats.words }} words &rarr; {{ stats.summary_words }}</span>
+                <span class="chip"><i class="fas fa-bolt"></i> done in {{ stats.processing_time }}</span>
+            </div>
+        </div>
+
+        <article class="tx-card result-card">
+            <header class="result-head">
+                <span class="result-icon summary"><i class="fas fa-lightbulb"></i></span>
+                <h2>Summary</h2>
+                <button type="button" class="icon-btn copy-btn" data-target="summary-text" title="Copy summary"><i class="far fa-copy"></i></button>
+            </header>
+            <div class="result-body" id="summary-text">{{ summary }}</div>
+        </article>
+
+        <article class="tx-card result-card">
+            <header class="result-head">
+                <span class="result-icon"><i class="fas fa-file-alt"></i></span>
+                <h2>Transcription</h2>
+                <button type="button" class="icon-btn copy-btn" data-target="transcription-text" title="Copy transcription"><i class="far fa-copy"></i></button>
+                <button type="button" class="icon-btn" id="toggle-transcript" title="Show more / less" aria-expanded="false"><i class="fas fa-chevron-down"></i></button>
+            </header>
+            <div class="result-body collapsible" id="transcription-text">{{ transcription }}</div>
+        </article>
+
+        <div class="action-row">
+            <a href="{% url 'transcribe' %}" class="btn-secondary"><i class="fas fa-redo"></i> Process new audio</a>
+            <form method="post" action="{% url 'download_pdf' %}">
+                {% csrf_token %}
+                <input type="hidden" name="audio_filename" value="{{ audio_filename }}">
+                <input type="hidden" name="transcription" value="{{ transcription }}">
+                <input type="hidden" name="summary" value="{{ summary }}">
+                <button type="submit" class="btn-primary"><i class="fas fa-file-pdf"></i> <span>Download as PDF</span></button>
+            </form>
+        </div>
+    </section>
+
+    {# ------------------------------------------------- 4. FAILED / CANCELLED #}
+    {% else %}
+    <section class="tx-card end-card {{ job.state }}">
+        {% if job.state == 'failed' %}
+            <span class="end-icon"><i class="fas fa-exclamation-triangle"></i></span>
+            <h2>We could not process this file</h2>
+            <p>{{ job.error }}</p>
+        {% else %}
+            <span class="end-icon"><i class="fas fa-ban"></i></span>
+            <h2>Cancelled</h2>
+            <p>The job for <b>{{ job.filename }}</b> was cancelled and nothing was saved.</p>
+        {% endif %}
+        <a href="{% url 'transcribe' %}" class="btn-primary"><i class="fas fa-redo"></i> <span>Try another file</span></a>
+    </section>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static_v 'js/transcribe.js' %}"></script>
+{% endblock %}

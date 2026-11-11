@@ -1,0 +1,133 @@
+{% extends 'core/layout.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content" data-aos="fade-up">
+                <h1 class="hero-title">Transform Audio into <span class="gradient-text">Actionable Insights</span></h1>
+                <p class="hero-subtitle">Upload a recording and get a transcript and a short summary, powered by OpenAI Whisper and Facebook BART</p>
+                <div class="hero-cta">
+                    <a href="#features" class="cta-button primary pulse-animation">Explore Features</a>
+                    <a href="{% url 'transcribe' %}" class="cta-button secondary">Start Summarizing</a>
+                </div>
+            </div>
+            <div class="hero-visual" data-aos="fade-left" data-aos-delay="200">
+                <div class="visual-container">
+                    <div class="audio-wave">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <img src="{% static 'images/mic-icon.jpeg' %}" alt="AudioBrief" class="hero-image">
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">What AudioBrief Does</h2>
+                <p class="section-subtitle">From a recording to a readable summary</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="feature-icon blue">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Audio Transcription</h3>
+                        <p>Upload an MP3, WAV, M4A, OGG, FLAC or AAC file and get the speech written out as text. English audio is supported.</p>
+                        <a href="{% url 'transcribe' %}" class="feature-link">Try Audio Transcription <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="feature-icon purple">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Smart Summarization</h3>
+                        <p>Long transcripts are split into parts, summarized with BART, and joined into one short summary you can download as a PDF.</p>
+                        <a href="{% url 'transcribe' %}" class="feature-link">Try Smart Summarization <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="feature-icon red">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>YouTube Summaries <span class="soon-badge">Coming soon</span></h3>
+                        <p>A planned future enhancement: summarize a YouTube video from its link. It is not available yet.</p>
+                        <a href="{% url 'youtube' %}" class="feature-link">See what is planned <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works-section">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Three simple steps</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-card" data-aos="fade-right" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Upload Your Audio</h3>
+                        <p>Drop in an audio file (up to 100 MB) on the Audio Summarize page</p>
+                    </div>
+                </div>
+
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Watch It Being Processed</h3>
+                        <p>Follow the live progress while the audio is prepared, transcribed and summarized</p>
+                    </div>
+                </div>
+
+                <div class="step-card" data-aos="fade-left" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Read and Download</h3>
+                        <p>Read the transcript and the summary, copy them, or download both as a PDF</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="cta-section" data-aos="zoom-in">
+            <div class="cta-content">
+                <h2>Ready to summarize your first recording?</h2>
+                <p>Upload a file and see the result in a few minutes</p>
+                <div class="cta-buttons">
+                    <a href="{% url 'transcribe' %}" class="action-button audio">
+                        <div class="button-icon"><i class="fas fa-microphone"></i></div>
+                        <div class="button-text">
+                            <span>Summarize Audio</span>
+                            <small>Upload MP3, WAV, M4A &amp; more</small>
+                        </div>
+                    </a>
+                    <a href="{% url 'youtube' %}" class="action-button youtube">
+                        <div class="button-icon"><i class="fab fa-youtube"></i></div>
+                        <div class="button-text">
+                            <span>YouTube Summaries</span>
+                            <small>Coming soon</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+{% endblock %}

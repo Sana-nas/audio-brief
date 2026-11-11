@@ -1,0 +1,13 @@
+# Versions below are the ones this project was developed with.
+Django==5.2
+openai-whisper==20240930
+transformers==4.51.3
+torch>=2.0            # developed with 2.7.0 (CPU build). For an NVIDIA GPU see https://pytorch.org/get-started/locally/
+numpy>=1.26
+pydub==0.25.1
+reportlab==4.4.0
+
+# Optional: only if you run with DB_ENGINE=mysql (see README.md)
+# mysqlclient==2.2.7
+
+# NOTE: ffmpeg is also required (system program, not a pip package) - see README.md

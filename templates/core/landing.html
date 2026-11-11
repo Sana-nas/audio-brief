@@ -1,0 +1,284 @@
+{% load static %}
+{% load assets %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <title>AudioBrief | AI-Powered Audio Summarization</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static_v 'css/base.css' %}">
+  
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <!-- Wave Background -->
+  <div class="wave-bg">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+  
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="{% url 'landing' %}" class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-microphone-alt"></i>
+      </div>
+      <div class="logo-text">AudioBrief</div>
+    </a>
+    
+    <div class="nav-links">
+      {% if user.is_authenticated %}
+        <a href="{% url 'transcribe' %}" class="nav-link">Audio Summarize</a>
+        <a href="{% url 'youtube' %}" class="nav-link">YouTube (soon)</a>
+        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary1">Log in</a>
+        <a href="{% url 'register' %}" class="btn btn-secondary">Sign up</a>
+      {% endif %}
+    </div>
+    
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+  
+  {% block content %}
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title" data-typewriter="Transform audio into actionable insights">Transform audio into actionable insights</h1>
+      <p class="hero-subtitle">Automatically transcribe and summarize your audio files. Save time and extract key information from meetings, lectures, and interviews.</p>
+      <div class="hero-buttons">
+        <a href="{% url 'login' %}" class="btn btn-secondary">Get started</a>
+        <a href="#how-it-works" class="btn btn-primary">Learn more</a>
+      </div>
+    </div>
+    
+    <!-- Decorative animated circles -->
+    <div class="animated-circle circle-1" data-speed="0.05"></div>
+    <div class="animated-circle circle-2" data-speed="0.03"></div>
+    <div class="animated-circle circle-3" data-speed="0.07"></div>
+  </section>
+  
+  <!-- Project Overview Section -->
+  <section class="project-overview">
+    <div class="container">
+      <h2 class="section-heading">AI-Powered Audio Summarization</h2>
+      <p class="section-description">
+        AudioBrief uses two open-source AI models, OpenAI Whisper and Facebook BART, to turn spoken
+        audio into a written transcript and a short summary. It is handy for lectures, meetings,
+        interviews and podcasts: upload a file, follow the progress live, and download the result as a PDF.
+      </p>
+    </div>
+  </section>
+  
+  <!-- Audio Waveform Visualization Section -->
+  <section class="waveform-section">
+    <div class="waveform-container">
+      <div class="waveform-content">
+        <h2>Experience Audio in a New Way</h2>
+        <p>Whisper turns speech into text, and BART condenses long transcripts into short, readable summaries.</p>
+        <ul class="waveform-features">
+          <li><i class="fas fa-check-circle"></i> Speech-to-text with OpenAI Whisper</li>
+          <li><i class="fas fa-check-circle"></i> Abstractive summaries with BART</li>
+          <li><i class="fas fa-check-circle"></i> Live progress while your file is processed</li>
+        </ul>
+      </div>
+      <div class="audio-waveform">
+        <div class="waveform-visualization"></div>
+        <div class="waveform-controls">
+          <button class="play-button"><i class="fas fa-play"></i></button>
+          <div class="timeline">
+            <div class="progress"></div>
+          </div>
+          <span class="duration">00:00 / 03:24</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="section-title" data-aos="fade-up">
+      <h2>How It Works</h2>
+      <p>Convert an audio file to text and a concise summary in three simple steps</p>
+    </div>
+    
+    <div class="steps-container" data-aos="fade-up">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">
+          <i class="fas fa-upload"></i>
+        </div>
+        <h3 class="step-title">Upload Audio</h3>
+        <p class="step-description">Upload an MP3, WAV, M4A, OGG, FLAC or AAC file (up to 100 MB).</p>
+      </div>
+      
+      <div class="step-connector"></div>
+      
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">
+          <i class="fas fa-cogs"></i>
+        </div>
+        <h3 class="step-title">AI Processing</h3>
+        <p class="step-description">Whisper transcribes the speech and BART summarizes the text. You can watch each stage live.</p>
+      </div>
+      
+      <div class="step-connector"></div>
+      
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <h3 class="step-title">Get Summary</h3>
+        <p class="step-description">Receive your transcript and concise summary, highlighting the most important points.</p>
+      </div>
+    </div>
+  </section>
+  
+  
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="section-title" data-aos="fade-up">
+      <h2>Powerful Features</h2>
+      <p>AudioBrief turns audio files into transcripts and summaries you can read in minutes.</p>
+    </div>
+    
+    <div class="features-container">
+      <!-- First row: 3 cards -->
+      <div class="features-row" data-aos="fade-up">
+        <div class="feature-card" data-aos-delay="100">
+          <div class="feature-icon">
+            <i class="fas fa-headphones"></i>
+          </div>
+          <h3 class="feature-title">Audio Transcription</h3>
+          <p class="feature-description">Convert English-language audio recordings into text with OpenAI Whisper.</p>
+        </div>
+        
+        <div class="feature-card" data-aos-delay="200">
+          <div class="feature-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="feature-title">Smart Summaries</h3>
+          <p class="feature-description">Get a short summary of the key points, even for long recordings, generated by Facebook's BART model.</p>
+        </div>
+        
+        <div class="feature-card" data-aos-delay="300">
+          <div class="feature-icon">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <h3 class="feature-title">YouTube Summaries <span class="soon-badge">Coming soon</span></h3>
+          <p class="feature-description">A planned future enhancement: paste a YouTube link and get a summary. Not available yet.</p>
+        </div>
+      </div>
+      
+      <!-- Second row: 3 cards -->
+      <div class="features-row" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card" data-aos-delay="400">
+          <div class="feature-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="feature-title">Live Progress</h3>
+          <p class="feature-description">Follow every stage (upload, preparing, transcribing, summarizing) on a real progress bar, and cancel any time.</p>
+        </div>
+        
+        <div class="feature-card" data-aos-delay="500">
+          <div class="feature-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h3 class="feature-title">Common Formats</h3>
+          <p class="feature-description">Works with MP3, WAV, M4A, OGG, FLAC and AAC files, converted automatically with ffmpeg.</p>
+        </div>
+        
+        <div class="feature-card" data-aos-delay="600">
+          <div class="feature-icon">
+            <i class="fas fa-download"></i>
+          </div>
+          <h3 class="feature-title">PDF Export</h3>
+          <p class="feature-description">Download the transcript and summary as a neat PDF to save, print or share.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endblock %}
+  
+  {% block footer %}
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-wave"></div>
+    <div class="footer-bg"></div>
+    
+    <div class="footer-container">
+      <div class="footer-about">
+        <div class="footer-logo">
+          <i class="fas fa-microphone-alt"></i>
+          AudioBrief
+        </div>
+        <p>Converts speech to text and short summaries with Whisper and BART. Built with Django and Python.</p>
+      </div>
+      
+      <div class="footer-links-container">
+        <h3 class="footer-title">Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="{% url 'landing' %}">Home</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'transcribe' %}">Audio Summarize</a></li>
+            <li><a href="{% url 'youtube' %}">YouTube Summarize</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      
+      <div class="footer-contact">
+        <h3 class="footer-title">About</h3>
+        <p><i class="fas fa-code"></i> Django &bull; Whisper &bull; BART</p>
+        <p><i class="fas fa-shield-alt"></i> Uploaded audio is deleted after processing</p>
+        <p><i class="fas fa-user"></i> Built by Sana Anas K</p>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      &copy; {% now "Y" %} AudioBrief. All rights reserved.
+    </div>
+  </footer>
+  {% endblock %}
+  
+  {% block extra_js %}{% endblock %}
+  
+  <!-- AOS Animations -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: false,
+      duration: 800,
+    });
+  </script>
+  
+  <!-- Custom JavaScript -->
+  <script src="{% static_v 'js/base.js' %}"></script>
+</body>
+</html>

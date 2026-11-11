@@ -1,0 +1,145 @@
+{% load static %}
+{% load assets %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <title>AudioBrief | Register</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static_v 'css/register.css' %}">
+    <link rel="stylesheet" href="{% static_v 'css/base.css' %}">
+</head>
+<body>
+    <!-- Wave Background -->
+    <div class="wave-bg">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    
+    <!-- Notification Area -->
+    {% if messages %}
+    <div class="notifications-container">
+        {% for message in messages %}
+            <div class="notification {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+                <span class="close-btn"><i class="fas fa-times"></i></span>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Navbar from base.html -->
+    <nav class="navbar">
+        <a href="{% url 'landing' %}" class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-microphone-alt"></i>
+            </div>
+            <div class="logo-text">AudioBrief</div>
+        </a>
+        
+        <div class="nav-links">
+            <a href="{% url 'landing' %}" class="nav-link">Explore</a>
+            {% if user.is_authenticated %}
+                <!-- <a href="{% url 'transcribe' %}" class="nav-link">Audio Summarize</a>
+                <a href="{% url 'youtube' %}" class="nav-link">YouTube Summarize</a>
+                <a href="{% url 'logout' %}" class="nav-link">Logout</a> -->
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary1">Log in</a>
+                <!-- <a href="{% url 'register' %}" class="btn btn-secondary active">Sign up</a> -->
+            {% endif %}
+        </div>
+        
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+    <br>
+    
+    <!-- Register Container -->
+    <div class="page-container">
+        <div class="register-content">
+            <div class="register-card">
+                <div class="register-left">
+                    <div class="register-illustration">
+                        <h2>Join AudioBrief</h2>
+                        <p>Create your account to transform audio into actionable insights with AI-powered summarization.</p>
+                        <div class="hero-features">
+                            <div class="feature"><i class="fas fa-check-circle"></i> Precise transcription</div>
+                            <div class="feature"><i class="fas fa-check-circle"></i> Smart summaries</div>
+                            <div class="feature"><i class="fas fa-check-circle"></i> Time-saving tools</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="register-right">
+                    <div class="register-form-container">
+                        <h2>Create Account</h2>
+                        <p class="form-subtitle">Fill in your details to get started</p>
+                        
+                        <form method="post" id="register-form" class="register-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">
+                                    <i class="fas fa-user"></i>
+                                    <span>Username</span>
+                                </label>
+                                <input type="text" id="username" name="username" placeholder="Choose a username" autocomplete="username" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password1">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Password</span>
+                                </label>
+                                <input type="password" id="password1" name="password1" placeholder="Create a password" autocomplete="new-password" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password2">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Confirm Password</span>
+                                </label>
+                                <input type="password" id="password2" name="password2" placeholder="Confirm your password" autocomplete="new-password" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="terms-label">
+                                    <input type="checkbox" name="terms" required>
+                                    <span>I agree to the <a href="#" class="terms-link">Terms</a> and <a href="#" class="terms-link">Privacy Policy</a></span>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="register-btn">
+                                <span>Create Account</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                        
+                        <div class="login-prompt">
+                            <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{% static_v 'js/register.js' %}"></script>
+    <script src="{% static_v 'js/base.js' %}"></script>
+</body>
+</html>
