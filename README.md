@@ -14,6 +14,10 @@
 </p>
 
 <p align="center">
+  Built by <b>Sana Anas K</b> &middot; <a href="https://sana-anas.vercel.app">Portfolio</a>
+</p>
+
+<p align="center">
   <img src="docs/demo.gif" alt="Demo: upload an audio file, watch the live progress, read the summary and transcript" width="85%">
 </p>
 
